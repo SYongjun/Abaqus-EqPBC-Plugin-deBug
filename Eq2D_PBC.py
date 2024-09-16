@@ -54,26 +54,100 @@ def PBC_Eq_2D(Edge_L,Edge_R,Edge_U,Edge_D,modelName):
     RnodesO.sort(key=keyY)
     UnodesO.sort(key=keyX)
     DnodesO.sort(key=keyX)
-#******************************************    
+#******************************************
+#deal node in one space position    
     Ln,Rn,Un,Dn=[],[],[],[]
+#*************************************
+# left edge
+    isbase = True
+    ifnext = False
     for i in range(len(LnodesO)-1):
-        if (LnodesO[i][2]-LnodesO[i+1][2])**2<0.0001:
-            continue
+#judge the node is on the base
+        if (LnodesO[i][2]-LnodesO[i+1][2])**2<0.00000001:
+            if LnodesO[i][4]!=LnodesO[0][4]:
+                isbase = False
+            else:
+                isbase = True
+            if isbase:
+                Ln.append(LnodesO[i])
+                ifnext = not ifnext
+                continue
+            else:
+                continue
+#continue circle  ************************              
+        if ifnext:
+            ifnext = not ifnext
+            continue   
+#***************************************            
         Ln.append(LnodesO[i])
     Ln.append(LnodesO[-1])
+#****************************************
+##***************************************
+# right edge  
+    isbase = True
+    ifnext = False
     for i in range(len(RnodesO)-1):
-        if (RnodesO[i][2]-RnodesO[i+1][2])**2<0.0001:
-            continue
+        if (RnodesO[i][2]-RnodesO[i+1][2])**2<0.00000001:
+            if RnodesO[i][4]!=RnodesO[0][4]:
+                isbase = False
+            else:
+                isbase = True
+            if isbase:
+                Rn.append(RnodesO[i])
+                ifnext = not ifnext
+                continue
+            else:
+                continue
+#continue circle  ************************              
+        if ifnext:
+            ifnext = not ifnext
+            continue   
         Rn.append(RnodesO[i])
     Rn.append(RnodesO[-1])
+#*****************************************
+#*****************************************
+# up edge
+    isbase = True
+    ifnext = False
     for i in range(len(UnodesO)-1):
-        if (UnodesO[i][1]-UnodesO[i+1][1])**2<0.0001:
-            continue
+        if (UnodesO[i][1]-UnodesO[i+1][1])**2<0.00000001:
+            if UnodesO[i][4]!=UnodesO[0][4]:
+                isbase = False
+            else:
+                isbase = True
+            if isbase:
+                Un.append(UnodesO[i])
+                ifnext = not ifnext
+                continue
+            else:
+                continue
+#continue circle  ************************              
+        if ifnext:
+            ifnext = not ifnext
+            continue   
         Un.append(UnodesO[i])
     Un.append(UnodesO[-1])
+###***************************************
+#*****************************************
+# Down Edge
+    isbase = True
+    ifnext = False
     for i in range(len(DnodesO)-1):
-        if (DnodesO[i][1]-DnodesO[i+1][1])**2<0.0001:
-            continue
+        if (DnodesO[i][1]-DnodesO[i+1][1])**2<0.00000001:
+            if DnodesO[i][4]!=DnodesO[0][4]:
+                isbase = False
+            else:
+                isbase = True
+            if isbase:
+                Dn.append(DnodesO[i])
+                ifnext = not ifnext
+                continue
+            else:
+                continue
+#continue circle  ************************              
+        if ifnext:
+            ifnext = not ifnext
+            continue   
         Dn.append(DnodesO[i])
     Dn.append(DnodesO[-1])
 #******************************************
