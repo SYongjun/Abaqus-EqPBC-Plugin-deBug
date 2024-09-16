@@ -33,23 +33,21 @@ def PBC_Eq_2D(Edge_L,Edge_R,Edge_U,Edge_D,modelName):
     for i in range(len(Edge_D)):
         for j in Edge_D[i].getNodes():
             Dnodes.append(j)
-#******************************************        
-    instanceName = Dnodes[0].instanceName
-    
+#******************************************           
     for i in Lnodes:
-        xtemp = [int(i.label),float( i.coordinates[0]),float(i.coordinates[1]),float(i.coordinates[2])]
+        xtemp = [int(i.label),float( i.coordinates[0]),float(i.coordinates[1]),float(i.coordinates[2]),str(i.instanceName)]
         LnodesO.append(xtemp)
         del xtemp       
     for i in Rnodes:
-        xtemp = [int(i.label),float( i.coordinates[0]),float(i.coordinates[1]),float(i.coordinates[2])]
+        xtemp = [int(i.label),float( i.coordinates[0]),float(i.coordinates[1]),float(i.coordinates[2]),str(i.instanceName)]
         RnodesO.append(xtemp)  
         del xtemp
     for i in Unodes:
-        xtemp = [int(i.label),float( i.coordinates[0]),float(i.coordinates[1]),float(i.coordinates[2])]
+        xtemp = [int(i.label),float( i.coordinates[0]),float(i.coordinates[1]),float(i.coordinates[2]),str(i.instanceName)]
         UnodesO.append(xtemp)
         del xtemp
     for i in Dnodes:
-        xtemp = [int(i.label),float( i.coordinates[0]),float(i.coordinates[1]),float(i.coordinates[2])]
+        xtemp = [int(i.label),float( i.coordinates[0]),float(i.coordinates[1]),float(i.coordinates[2]),str(i.instanceName)]
         DnodesO.append(xtemp)
         del xtemp
     LnodesO.sort(key=keyY)
@@ -59,25 +57,25 @@ def PBC_Eq_2D(Edge_L,Edge_R,Edge_U,Edge_D,modelName):
 #******************************************    
     Ln,Rn,Un,Dn=[],[],[],[]
     for i in range(len(LnodesO)-1):
-        if LnodesO[i][0]==LnodesO[i+1][0]:
+        if (LnodesO[i][2]-LnodesO[i+1][2])**2<0.0001:
             continue
-        Ln.append(LnodesO[i][0])
-    Ln.append(LnodesO[-1][0])
+        Ln.append(LnodesO[i])
+    Ln.append(LnodesO[-1])
     for i in range(len(RnodesO)-1):
-        if RnodesO[i][0]==RnodesO[i+1][0]:
+        if (RnodesO[i][2]-RnodesO[i+1][2])**2<0.0001:
             continue
-        Rn.append(RnodesO[i][0])
-    Rn.append(RnodesO[-1][0])
+        Rn.append(RnodesO[i])
+    Rn.append(RnodesO[-1])
     for i in range(len(UnodesO)-1):
-        if UnodesO[i][0]==UnodesO[i+1][0]:
+        if (UnodesO[i][1]-UnodesO[i+1][1])**2<0.0001:
             continue
-        Un.append(UnodesO[i][0])
-    Un.append(UnodesO[-1][0])
+        Un.append(UnodesO[i])
+    Un.append(UnodesO[-1])
     for i in range(len(DnodesO)-1):
-        if DnodesO[i][0]==DnodesO[i+1][0]:
+        if (DnodesO[i][1]-DnodesO[i+1][1])**2<0.0001:
             continue
-        Dn.append(DnodesO[i][0])
-    Dn.append(DnodesO[-1][0])
+        Dn.append(DnodesO[i])
+    Dn.append(DnodesO[-1])
 #******************************************
 #******************************************    
     LL=RnodesO[0][1]-LnodesO[0][1]
@@ -100,10 +98,10 @@ def PBC_Eq_2D(Edge_L,Edge_R,Edge_U,Edge_D,modelName):
         d=d-1
         
 #********************************************************************************   
-    LD,RD,LU = [Ln[0]],[Rn[0]],[Un[0]]
-    ass.SetFromNodeLabels(name = 'LD' , nodeLabels=((instanceName,LD),))
-    ass.SetFromNodeLabels(name = 'RD' , nodeLabels=((instanceName,RD),))
-    ass.SetFromNodeLabels(name = 'LU' , nodeLabels=((instanceName,LU),))
+    LD,RD,LU = [Ln[0][0]],[Rn[0][0]],[Un[0][0]]
+    ass.SetFromNodeLabels(name = 'LD' , nodeLabels=((Ln[0][4],LD),))
+    ass.SetFromNodeLabels(name = 'RD' , nodeLabels=((Rn[0][4],RD),))
+    ass.SetFromNodeLabels(name = 'LU' , nodeLabels=((Un[0][4],LU),))
 #******************************************
 #******************************************    
     for i in range(1,len(Ln)-1):
@@ -111,8 +109,8 @@ def PBC_Eq_2D(Edge_L,Edge_R,Edge_U,Edge_D,modelName):
         con2='eqXY'+str(i)
         Lnum = 'Lnode'+str(i)
         Rnum = 'Rnode'+str(i)
-        ass.SetFromNodeLabels(name = Lnum , nodeLabels=((instanceName,[Ln[i]]),))
-        ass.SetFromNodeLabels(name = Rnum , nodeLabels=((instanceName,[Rn[i]]),))
+        ass.SetFromNodeLabels(name = Lnum , nodeLabels=((Ln[i][4],[Ln[i][0]]),))
+        ass.SetFromNodeLabels(name = Rnum , nodeLabels=((Rn[i][4],[Rn[i][0]]),))
         create_Eq_2D(Rnum,Lnum,'RD','LD',con1,1,myModel)
         create_Eq_2D(Rnum,Lnum,'RD','LD',con2,2,myModel)
 #******************************************
@@ -122,8 +120,8 @@ def PBC_Eq_2D(Edge_L,Edge_R,Edge_U,Edge_D,modelName):
         con2='eqYY'+str(i)
         Unum = 'Unode'+str(i)
         Dnum = 'Dnode'+str(i)
-        ass.SetFromNodeLabels(name = Unum , nodeLabels=((instanceName,[Un[i]]),))
-        ass.SetFromNodeLabels(name = Dnum , nodeLabels=((instanceName,[Dn[i]]),))
+        ass.SetFromNodeLabels(name = Unum , nodeLabels=((Un[i][4],[Un[i][0]]),))
+        ass.SetFromNodeLabels(name = Dnum , nodeLabels=((Dn[i][4],[Dn[i][0]]),))
         create_Eq_2D(Unum,Dnum,'LU','LD',con1,1,myModel)
         create_Eq_2D(Unum,Dnum,'LU','LD',con2,2,myModel) 
     myModel.Equation(name='ctrl_E11',terms=((1.0,'RD',1),(-1.0,'LD', 1),(-1.0*LL,'Ctrl_P1', 1)))
