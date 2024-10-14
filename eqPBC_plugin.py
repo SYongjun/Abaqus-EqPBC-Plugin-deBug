@@ -2,7 +2,7 @@ from abaqusGui import getAFXApp, Activator, AFXMode
 from abaqusConstants import ALL
 import os
 thisPath = os.path.abspath(__file__)
-thisDir = os.path.dirname(thisPath)
+thisDir = thisPath
 
 toolset = getAFXApp().getAFXMainWindow().getPluginToolset()
 toolset.registerGuiMenuButton(
